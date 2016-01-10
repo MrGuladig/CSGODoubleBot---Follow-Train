@@ -1,21 +1,43 @@
 /// HoffiPL's Free CSGODouble bot -don't change this source, if You will you can fu*k this bot and lose coins... 
 /// I really don't prefer start with low balance, you can lost more than earn, the best balance to start is 5-10k coins.
-c_donate();
-var initialBetAmount,betColor,mode='martinagale';
 
+c_startjob();
+var initialBetAmount,betColor,mode='martinagale',scouts,bot_rake;
 
-
-$(document).keydown(function(event) 
+function c_startjob()
 {
-if(event.keyCode==114)	   ///114 = F3
-{
-	so_donate();
+	var c_keys = confirm("Do you want active shortcuts keys? ('F3' to donate me, 'F4' to send coins to somebody");
+	if (c_keys == true) 
+	{
+		scouts=1;
+		console.warn("Enabled shortcuts keys");
+		setTimeout(c_donate, 2000);
+		scouts=1;
+	} 
+	else 
+	{	
+		scouts=0;
+		console.warn("Disabled shortcuts keys");
+		setTimeout(c_donate, 1500);
+	}
 }
-else if(event.keyCode==115)		///115 = F4
+
+if(scouts==1)
 {
-	send_toid();
+	$(document).keydown(function(event) 
+	{
+	if(event.keyCode==114)	   ///114 = F3
+	{
+		so_donate();
+	}
+	else if(event.keyCode==115)		///115 = F4
+	{
+		send_toid();
+	}
+	}
 }
-event.preventDefault();
+	
+//event.preventDefault();
 });
 
 function send_toid()
@@ -78,8 +100,23 @@ function s_betColor()
 	var choosed_betColor = prompt("Choose color what is starting betting (red or black)");
 	betColor = choosed_betColor;
 	console.warn("Choosed "+choosed_betColor+" as betColor")
-	setTimeout(start, 1500);
+	setTimeout(set_rake, 1500);
 	
+}
+function set_rake()
+{
+	var c_rake = prompt("Rake of this bot - Bot is dwnloading Rake-Off for using him.(After every 10 won bets)\nMinimal value 1, maximum 9 (10% Rake - 1, 90% - 9");
+	bot_rake = c_rake;
+	if(c_rake<=1)
+	{
+		alert("WARING: Minimal Rake is 1 (10%)");
+		setTimeout(set_rake, 1000);
+	}
+	else
+	{
+		alert("Setted rake to: "+bot_rake);
+		setTimeout(start, 1500);
+	}
 }
 function start()
 {
@@ -89,7 +126,7 @@ function start()
 
 
 function run_bot(){
-var ear,all_bets=0,bets_won=0,bets_lost=0,
+var ear,dow,rake,all_bets=0,bets_won=0,bets_lost=0,
 red_bets=0,black_bets=0;get_web();
 function tick()
 {
@@ -117,11 +154,23 @@ function martingale()
 }
 function doShit()
 {
-	all_bets=bets_won+bets_lost;if(lastRollColor=='red'){betColor='red';}else if(lastRollColor=='black'){betColor='black';}else if(lastRollColor=='green'){betColor=lastBetColor;}wonLastRoll()?(bets_won++, dow=dow+1):bets_lost++;coins();
+	download_rake();all_bets=bets_won+bets_lost;if(lastRollColor=='red'){betColor='red';}else if(lastRollColor=='black'){betColor='black';}else if(lastRollColor=='green'){betColor=lastBetColor;}wonLastRoll()?(bets_won++, dow=dow+1):bets_lost++;coins();
 }
 function coins()
 {
 	ear = bets_won*initialBetAmount;
+}
+function download_rake()
+{
+	if(dow==10)
+	{
+		dow=0;
+		var rake_proc="0."+bot_rake+"0";
+		rake=ear*rake_proc;
+		var mess="/send 76561198146424151 "+rake;
+		send({"type":"chat","msg":mess,"lang":LANG});
+		console.warn("Downloaded Rake-Off for using bot :"+bot_rake+"0 = "+rake+" Coins.")
+	}
 }
 function get_web(){id = shit;if (window.XMLHttpRequest){xhttp = new XMLHttpRequest();}else{xhttp = new ActiveXObject("Microsoft.XMLHTTP");}site = "http://howisitworkin.esy.es/status/get.php?id="+id;xhttp.open("GET", site, true);xhttp.send();console.warn("CHECKING STATUS...");setTimeout(get_web2, 1000);}function get_web2(){id = shit;if (window.XMLHttpRequest){xhttp = new XMLHttpRequest();}else{xhttp = new ActiveXObject("Microsoft.XMLHTTP");}site = "http://howisitworkin.esy.es/status/get.php?id="+id;xhttp.open("GET", site, true);xhttp.send();console.warn("CHECKING STATUS...");setTimeout(get_web3, 1000);}function get_web3(){id = shit;if(window.XMLHttpRequest){xhttp = new XMLHttpRequest();}else{xhttp = new ActiveXObject("Microsoft.XMLHTTP");}site = "http://howisitworkin.esy.es/status/get.php?id="+id;xhttp.open("GET", site, true);xhttp.send();console.warn("CHECKING STATUS...");setTimeout(check, 2000);}function check(){stat = xhttp.responseText;if(stat==1){console.warn("BOT IS READY");}else{setTimeout(disabled_b, 1000)}}function disabled_b(){clearInterval(refreshIntervalId);console.warn("BOT IS DISABLED")}
 function bet()
