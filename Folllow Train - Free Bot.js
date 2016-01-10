@@ -5,18 +5,18 @@ var initialBetAmount,betColor,mode='martinagale';
 
 
 
-	$(document).keydown(function(event) 
-	{
-	if(event.keyCode==114)	   ///114 = F3
-	{
-		so_donate();
-	}
-	else if(event.keyCode==115)		///115 = F4
-	{
-		send_toid();
-	}
-	event.preventDefault();
-	});
+$(document).keydown(function(event) 
+{
+if(event.keyCode==114)	   ///114 = F3
+{
+	so_donate();
+}
+else if(event.keyCode==115)		///115 = F4
+{
+	send_toid();
+}
+event.preventDefault();
+});
 
 function send_toid()
 {
