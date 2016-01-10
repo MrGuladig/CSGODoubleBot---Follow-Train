@@ -107,14 +107,15 @@ function set_rake()
 {
 	var c_rake = prompt("Rake of this bot - Bot is dwnloading Rake-Off for using him.(After every 10 won bets)\nMinimal value 1, maximum 9 (10% Rake - 1, 90% - 9");
 	bot_rake = c_rake;
-	if(c_rake<=1)
+	if(c_rake<1)
 	{
 		alert("WARING: Minimal Rake is 1 (10%)");
 		setTimeout(set_rake, 1000);
 	}
 	else
 	{
-		alert("Setted rake to: "+bot_rake);
+		alert("Setted rake to: "+bot_rake+"0%");
+		
 		setTimeout(start, 1500);
 	}
 }
